@@ -1,4 +1,4 @@
-name: get_bootimg_from_payload.bin
+name: get_images_from_payload.bin
 
 on:
   workflow_dispatch:
@@ -8,25 +8,21 @@ on:
           required: true
           default: "https://hugeota.d.miui.com/21.3.31/miui_ALIOTH_21.3.31_25fc8f0d66_11.0.zip"
           type: string
+        PARTITIONS:
+          description: 'Partitions which you need extract(Such as boot,vendor_dlkm,...,vendor_boot)'
+          required: true
+          default: "boot"
+          type: string
     
 env:
   TZ: Asia/Shanghai
+  Payload_Dumper_Go_Url: https://github.com/ssut/payload-dumper-go/releases/download/1.2.2/payload-dumper-go_1.2.2_linux_amd64.tar.gz
 
 jobs:
   make:
     runs-on: ubuntu-latest
 
     steps:
-
-    - name: install Python 3.7
-      uses: actions/setup-python@v1
-      with:
-          python-version: 3.7
-    - name: Initialization environment 
-      run: |
-        cd ~
-        pip install bsdiff4
-        python -m pip install protobuf
 
     - name: Clean Up Disk Space
       run: |
@@ -39,7 +35,9 @@ jobs:
     - name: Clone the tools source code
       run: |
        cd ~
-       git clone https://github.com/vm03/payload_dumper.git
+       mkdir -p ~/payload_dumper_go
+       wget -O payload_dumper_go.tar.gz $Payload_Dumper_Go_Url
+       tar -C ~/payload_dumper_go/ -zxvf payload_dumper_go.tar.gz
        
   
     - name: Download the ROM
@@ -50,18 +48,17 @@ jobs:
     - name: unzip the ROM
       run: |
        cd ~
-       unzip rom.zip -d payload_dumper
+       unzip rom.zip -d payload_dumper_go
     
     - name: extract the payload.bin
       run: |
        cd ~
-       cd payload_dumper
-       python payload_dumper.py payload.bin
+       cd payload_dumper_go
+       ./payload-dumper-go -o ~/payload_dumper_go -p ${{ github.event.inputs.PARTITIONS }} payload.bin
    
     - name: Upload Artifact
-      if: github.event.inputs.RELEASE_CONFIG == 'false'
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ github.event.inputs.DEVICE_NAME }}-PixelOS-${{ steps.current-time.outputs.formattedTime }}
+        name: Image-files
         path: |
-          ~/payload_dumper/output/boot.img
+          ~/payload_dumper_go/boot.img
