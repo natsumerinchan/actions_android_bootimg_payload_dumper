@@ -1,11 +1,15 @@
 name: get_bootimg_from_payload.bin
 
 on:
-  watch:
-    types: [started]
+  workflow_dispatch:
+      inputs:
+        ROM_URL:
+          description: 'ROM directly link'
+          required: true
+          default: "https://hugeota.d.miui.com/21.3.31/miui_ALIOTH_21.3.31_25fc8f0d66_11.0.zip"
+          type: string
     
 env:
-  ROM_URL: https://hugeota.d.miui.com/21.3.31/miui_ALIOTH_21.3.31_25fc8f0d66_11.0.zip
   TZ: Asia/Shanghai
 
 jobs:
@@ -28,7 +32,7 @@ jobs:
       run: |
         docker rmi `docker images -q`
         sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d
-        sudo -E apt-get -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* mysql* php*
+        sudo -E apt-get -y purge azure-cli ghc* zulu* llvm* firefox google* dotnet* powershell openjdk* mysql* php*
         sudo -E apt-get -y autoremove --purge
         sudo -E apt-get clean 
         
@@ -41,7 +45,7 @@ jobs:
     - name: Download the ROM
       run: |
        cd ~
-       wget -O rom.zip $ROM_URL
+       wget -O rom.zip ${{ github.event.inputs.ROM_URL }}
    
     - name: unzip the ROM
       run: |
@@ -54,10 +58,10 @@ jobs:
        cd payload_dumper
        python payload_dumper.py payload.bin
    
-
-    
-    - name: Upload the bootimg to WeTransfer
-      run: |
-        cd ~
-        curl -sL https://git.io/file-transfer | sh
-        ./transfer wet ~/payload_dumper/output/boot.img
+    - name: Upload Artifact
+      if: github.event.inputs.RELEASE_CONFIG == 'false'
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ github.event.inputs.DEVICE_NAME }}-PixelOS-${{ steps.current-time.outputs.formattedTime }}
+        path: |
+          ~/payload_dumper/output/boot.img
