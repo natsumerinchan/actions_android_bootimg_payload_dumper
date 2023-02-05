@@ -61,4 +61,4 @@ jobs:
       with:
         name: Image-files
         path: |
-          ~/payload_dumper_go/boot.img
+          ~/payload_dumper_go/*.img
