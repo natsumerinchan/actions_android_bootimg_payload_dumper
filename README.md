@@ -1,4 +1,4 @@
-# actions_android_bootimg_payload_dumper
+# actions_android_image_payload_dumper
 利用Github Actions云端解包payload.bin中的boot.img及其它分区镜像
 
 
