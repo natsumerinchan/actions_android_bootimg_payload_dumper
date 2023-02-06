@@ -15,7 +15,7 @@
 
 最后，仅仅需要在`Actions`-`get_images_from_payload.bin`中"Run workflow"，就可以提取刷机包payload.bin中的镜像
 
-`Run workflow`中可以临时更换ROM链接，还可以设定需要提取的分区，请用英文逗号','将各分区隔开，如`boot,vendor_boot,vendor_dlkm`
+`Run workflow`中可以临时更换ROM链接，还可以设定需要提取的分区，请用英文逗号`,`将各分区隔开，如`boot,vendor_boot,vendor_dlkm`
 
 工作流运行完毕后，在Actions菜单点击刚完成的工作流的summary,Artifacts里的文件就是产物，点击下载即可。
 
