@@ -3,6 +3,11 @@ name: get_images_from_payload.bin
 on:
   workflow_dispatch:
       inputs:
+        UPLOAD_CONFIG:
+          description: 'Upload Artifacts to Actions'
+          required: true
+          default: "false"
+          type: boolean
         ROM_URL:
           description: 'ROM directly link'
           required: true
@@ -13,6 +18,7 @@ on:
           required: true
           default: "boot"
           type: string
+        
     
 env:
   TZ: Asia/Shanghai
@@ -57,6 +63,7 @@ jobs:
        ./payload-dumper-go -o ~/payload_dumper_go -p ${{ github.event.inputs.PARTITIONS }} payload.bin
    
     - name: Upload Artifact
+      if: github.event.inputs.UPLOAD_CONFIG == 'true'
       uses: actions/upload-artifact@v3
       with:
         name: Image-files
@@ -64,6 +71,7 @@ jobs:
           ~/payload_dumper_go/*.img
           
     - name: Upload the bootimg to WeTransfer
+      if: github.event.inputs.UPLOAD_CONFIG == 'false'
       run: |
         cd ~
         curl -sL https://git.io/file-transfer | sh
