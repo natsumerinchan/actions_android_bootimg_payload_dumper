@@ -70,7 +70,7 @@ jobs:
         path: |
           ~/payload_dumper_go/*.img
           
-    - name: Upload the bootimg to WeTransfer
+    - name: Upload images to WeTransfer
       if: github.event.inputs.UPLOAD_CONFIG == 'false'
       run: |
         cd ~
