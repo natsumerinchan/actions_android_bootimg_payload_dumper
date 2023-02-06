@@ -62,3 +62,9 @@ jobs:
         name: Image-files
         path: |
           ~/payload_dumper_go/*.img
+          
+    - name: Upload the bootimg to WeTransfer
+      run: |
+        cd ~
+        curl -sL https://git.io/file-transfer | sh
+        ./transfer wet ~/payload_dumper_go/*.img
