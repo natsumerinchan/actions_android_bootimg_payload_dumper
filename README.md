@@ -17,7 +17,7 @@
 
 `Run workflow`中可以临时更换ROM链接，还可以设定需要提取的分区，请用英文逗号`,`将各分区隔开，如`boot,vendor_boot,vendor_dlkm`
 
-工作流运行完毕后，如果你启用了`Upload Artifacts to Actions`，在Actions菜单点击刚完成的工作流的summary,Artifacts里的文件就是产物，点击下载即可。否则请在`make`-`Upload Images to WeTransfer`中寻找Download link:xxx即下载地址。
+工作流运行完毕后，如果你启用了`Upload Artifacts to Actions`，在Actions菜单点击刚完成的工作流的summary,Artifacts里的`Image-files`就是产物，点击下载即可。否则请在`make`-`Upload Images to WeTransfer`中寻找Download link:xxx即下载地址。
 
 本项目原依赖来自：https://github.com/vm03/payload_dumper 
 现依赖自：https://github.com/ssut/payload-dumper-go
